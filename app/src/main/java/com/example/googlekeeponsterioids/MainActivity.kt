@@ -10,6 +10,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.googlekeeponsterioids.navigation.Screen
+import com.example.googlekeeponsterioids.ui.screens.CreateNoteScreen
 import com.example.googlekeeponsterioids.ui.screens.HomeScreen
 import com.example.googlekeeponsterioids.ui.theme.GoogleKeepOnSterioidsTheme
 import com.example.googlekeeponsterioids.viewmodel.NotesViewModel
@@ -36,8 +41,25 @@ fun NotesApp(
     modifier: Modifier = Modifier,
     viewModel: NotesViewModel = viewModel()
 ) {
-    HomeScreen(
-        onCreateNote = { /* TODO: Implement note creation */ },
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Home.route,
         modifier = modifier
-    )
+    ) {
+        composable(Screen.Home.route) {
+            HomeScreen(
+                onCreateNote = { navController.navigate(Screen.CreateNote.route) }
+            )
+        }
+        composable(Screen.CreateNote.route) {
+            CreateNoteScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onSaveNote = { note ->
+                    viewModel.addNote(note)
+                }
+            )
+        }
+    }
 }

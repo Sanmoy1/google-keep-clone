@@ -1,6 +1,6 @@
 # Implemented Tasks - Google Keep Clone
 
-## 1. Project Setup (2025-01-10)
+## 1. Project Setup 
 - Created basic Android project with Jetpack Compose
 - Added necessary dependencies:
   - Jetpack Compose core libraries
@@ -10,7 +10,7 @@
   - Accompanist libraries
 - Set up build.gradle.kts with proper configurations and KSP plugin
 
-## 2. MVVM Architecture Setup (2025-01-10)
+## 2. MVVM Architecture Setup 
 ### Domain Layer
 - Created Note data model with properties:
   - id, title, content, color, timestamp, isPinned
@@ -30,3 +30,16 @@
   - Notes state management using StateFlow
   - Search query handling
   - Placeholder for note manipulation functions (add, pin)
+
+## 3. Note Creation Feature 
+### Navigation
+- Added Screen sealed class for type-safe navigation
+- Implemented navigation between Home and Create Note screens
+
+### UI Components
+- Created CreateNoteScreen with:
+  - Title and content input fields
+  - Color selector with Google Keep-like color palette
+  - Save and back navigation actions
+  - Real-time color preview for the note
+- Added 12 predefined note colors matching Google Keep's palette
