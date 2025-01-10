@@ -29,7 +29,7 @@
 - Created NotesViewModel with:
   - Notes state management using StateFlow
   - Search query handling
-  - Placeholder for note manipulation functions (add, pin)
+  - Note manipulation functions (add, pin)
 
 ## 3. Note Creation Feature 
 ### Navigation
@@ -43,3 +43,32 @@
   - Save and back navigation actions
   - Real-time color preview for the note
 - Added 12 predefined note colors matching Google Keep's palette
+
+## 4. Room Database Implementation
+### Data Layer
+- Created NoteEntity for Room database
+- Implemented NoteDao with CRUD operations:
+  - Insert, delete, and update notes
+  - Query all notes ordered by pin status and timestamp
+  - Search notes by title or content
+- Set up NotesDatabase with Room
+- Created NotesRepository to handle data operations
+
+### Integration
+- Updated NotesViewModel to use Room database:
+  - Real-time note updates using Kotlin Flow
+  - Debounced search functionality
+  - Note manipulation through repository
+- Added data mapping between domain and database models
+
+## 5. Notes Display Implementation
+### UI Enhancements
+- Updated HomeScreen to display notes from database:
+  - Real-time updates when notes change
+  - Empty state message when no notes exist
+  - Proper note ordering (pinned first, then by timestamp)
+- Enhanced NoteItem component:
+  - Added pin/unpin functionality
+  - Click handling for note editing
+  - Text overflow handling with ellipsis
+  - Visual feedback for pinned status

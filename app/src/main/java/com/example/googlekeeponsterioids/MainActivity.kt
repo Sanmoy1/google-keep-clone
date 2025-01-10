@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -42,6 +44,8 @@ fun NotesApp(
     viewModel: NotesViewModel = viewModel()
 ) {
     val navController = rememberNavController()
+    val notes by viewModel.notes.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
 
     NavHost(
         navController = navController,
@@ -50,7 +54,13 @@ fun NotesApp(
     ) {
         composable(Screen.Home.route) {
             HomeScreen(
-                onCreateNote = { navController.navigate(Screen.CreateNote.route) }
+                notes = notes,
+                onCreateNote = { navController.navigate(Screen.CreateNote.route) },
+                onSearchQueryChange = viewModel::updateSearchQuery,
+                onNoteClick = { /* TODO: Implement note editing */ },
+                onNotePinClick = { note -> 
+                    viewModel.toggleNotePinStatus(note.id, !note.isPinned)
+                }
             )
         }
         composable(Screen.CreateNote.route) {

@@ -1,37 +1,56 @@
 package com.example.googlekeeponsterioids.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.googlekeeponsterioids.data.local.NotesDatabase
+import com.example.googlekeeponsterioids.data.repository.NotesRepository
 import com.example.googlekeeponsterioids.domain.model.Note
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class NotesViewModel : ViewModel() {
-    private val _notes = MutableStateFlow<List<Note>>(emptyList())
-    val notes: StateFlow<List<Note>> = _notes.asStateFlow()
-
+class NotesViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository: NotesRepository = NotesRepository(
+        NotesDatabase.getInstance(application).noteDao
+    )
+    
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+    
+    val notes: StateFlow<List<Note>> = searchQuery
+        .debounce(300L)
+        .flatMapLatest { query ->
+            if (query.isBlank()) {
+                repository.getAllNotes()
+            } else {
+                repository.searchNotes(query)
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
-        // TODO: Implement search functionality
     }
 
     fun addNote(note: Note) {
         viewModelScope.launch {
-            // TODO: Implement note addition
-            val currentNotes = _notes.value.toMutableList()
-            currentNotes.add(note)
-            _notes.value = currentNotes
+            repository.insertNote(note)
         }
     }
 
-    fun togglePinNote(noteId: Int) {
+    fun deleteNote(note: Note) {
         viewModelScope.launch {
-            // TODO: Implement pin/unpin functionality
+            repository.deleteNote(note)
+        }
+    }
+
+    fun toggleNotePinStatus(noteId: Int, isPinned: Boolean) {
+        viewModelScope.launch {
+            repository.toggleNotePinStatus(noteId, isPinned)
         }
     }
 }
