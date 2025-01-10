@@ -1,0 +1,32 @@
+# Implemented Tasks - Google Keep Clone
+
+## 1. Project Setup (2025-01-10)
+- Created basic Android project with Jetpack Compose
+- Added necessary dependencies:
+  - Jetpack Compose core libraries
+  - Room for database
+  - ViewModel and Lifecycle components
+  - Navigation Compose
+  - Accompanist libraries
+- Set up build.gradle.kts with proper configurations and KSP plugin
+
+## 2. MVVM Architecture Setup (2025-01-10)
+### Domain Layer
+- Created Note data model with properties:
+  - id, title, content, color, timestamp, isPinned
+
+### UI Layer
+- Implemented HomeScreen with:
+  - TopAppBar with search functionality
+  - Two-column grid layout for notes
+  - Floating Action Button for note creation
+  - Menu icon for future drawer implementation
+- Created NoteItem component for displaying individual notes
+  - Support for custom background colors
+  - Bold title and normal content text styling
+
+### ViewModel Layer
+- Created NotesViewModel with:
+  - Notes state management using StateFlow
+  - Search query handling
+  - Placeholder for note manipulation functions (add, pin)
